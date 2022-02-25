@@ -40,17 +40,17 @@ func Start() {
 	fmt.Println("Bot is running !")
 
 	c := cron.New()
-	c.AddFunc("0 6 * * FRI", friday)
+	c.AddFunc("* * * * *", friday)
 	c.Start()
 }
 
 func friday() {
 	f, err := os.Open("friday-message.json")
 	if err != nil {
-		fmt.Println("Error with friday-message.json")
+		fmt.Println("Error with a friday-message.json file!")
 	}
 	defer f.Close()
-	req, err := http.NewRequest("POST", os.ExpandEnv("https://discord.com/api/channels/774597138318360586/messages"), f)
+	req, err := http.NewRequest("POST", os.ExpandEnv("https://discord.com/api/channels/"+config.FridayMessageChannel+"/messages"), f)
 	if err != nil {
 		fmt.Println("Error with sending a request")
 	}
@@ -70,6 +70,6 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if m.Content == config.BotPrefix+"ping" || m.Content == config.BotPrefix+" ping" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "pong")
+		_, _ = s.ChannelMessageSend(m.ChannelID, "Pong 🏓")
 	}
 }
