@@ -42,7 +42,7 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if m.Content == "ping" {
+	if m.Content == config.BotPrefix+"ping" || m.Content == config.BotPrefix+" ping" {
 		_, _ = s.ChannelMessageSend(m.ChannelID, "pong")
 	}
 }

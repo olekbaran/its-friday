@@ -1,4 +1,4 @@
 {
-  "token": "DISCORD_TOKEN",
-  "prefix": "YOUR_PREFIX"
+  "Token": "DISCORD_TOKEN",
+  "BotPrefix": "YOUR_PREFIX"
 }
