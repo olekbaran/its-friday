@@ -119,6 +119,26 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	if m.Content == config.BotPrefix+"help" || m.Content == config.BotPrefix+" help" {
+		help := &discordgo.MessageEmbed{
+			Color: 41938,
+			Title: "Help 🐬",
+			Fields: []*discordgo.MessageEmbedField{
+				{
+					Name:   "author",
+					Value:  "Infos about developer",
+					Inline: true,
+				},
+				{
+					Name:   "ping",
+					Value:  "PONG",
+					Inline: true,
+				},
+			},
+		}
+		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, help)
+	}
+
 	if m.Content == config.BotPrefix+"author" || m.Content == config.BotPrefix+" author" {
 		author := &discordgo.MessageEmbed{
 			Color: 41938,
@@ -143,6 +163,6 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if m.Content == config.BotPrefix+"ping" || m.Content == config.BotPrefix+" ping" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "Pong 🏓")
+		_, _ = s.ChannelMessageSend(m.ChannelID, "Pong 🐬")
 	}
 }
