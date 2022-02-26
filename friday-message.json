@@ -1,9 +1,15 @@
 {
+  "content": "@everyone",
   "tts": false,
   "embeds": [
     {
-      "title": "Hello, Embed!",
-      "description": "This is an embedded message."
+      "type": "rich",
+      "title": "It's Friday again 🐬",
+      "description": "It's Saturday, Sunday, what❔",
+      "color": 41938,
+      "footer": {
+        "text": "It's Friday again, 💨gain, 💨ain, 💨ain (what❔)"
+      }
     }
   ]
 }
