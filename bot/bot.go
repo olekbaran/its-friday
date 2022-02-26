@@ -126,12 +126,17 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			Fields: []*discordgo.MessageEmbedField{
 				{
 					Name:   "author",
-					Value:  "Infos about developer",
+					Value:  "Infos about the developer",
 					Inline: true,
 				},
 				{
 					Name:   "ping",
 					Value:  "PONG",
+					Inline: true,
+				},
+				{
+					Name:   "when-friday",
+					Value:  "Countdown to the next friday",
 					Inline: true,
 				},
 			},
@@ -142,10 +147,10 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == config.BotPrefix+"author" || m.Content == config.BotPrefix+" author" {
 		author := &discordgo.MessageEmbed{
 			Color: 41938,
-			Title: "Author 🧢",
+			Title: "Author 🐬",
 			Fields: []*discordgo.MessageEmbedField{
 				{
-					Name:   "🐬 Name",
+					Name:   "🧢 Name",
 					Value:  "Aleksander Baran",
 					Inline: true,
 				},
@@ -164,5 +169,66 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Content == config.BotPrefix+"ping" || m.Content == config.BotPrefix+" ping" {
 		_, _ = s.ChannelMessageSend(m.ChannelID, "Pong 🐬")
+	}
+
+	if m.Content == config.BotPrefix+"pong" || m.Content == config.BotPrefix+" pong" {
+		_, _ = s.ChannelMessageSend(m.ChannelID, "Ping 🐳")
+	}
+
+	if m.Content == config.BotPrefix+"when-friday" || m.Content == config.BotPrefix+" when-friday" {
+		date := time.Now()
+
+		format := "2006-01-02 15:04:05"
+		then, _ := time.Parse(format, "2022-03-04 00:00:00")
+
+		diff := date.Sub(then)
+
+		days := (diff.Hours() / -24) + 1
+		daysString := fmt.Sprintf("%.f", days)
+		if daysString == "1" {
+			daysString = fmt.Sprintf("%.f", days) + " day"
+		} else {
+			daysString = fmt.Sprintf("%.f", days) + " days"
+		}
+
+		hours := -(diff.Hours())
+		hoursString := fmt.Sprintf("%.f", hours)
+		if hoursString == "1" {
+			hoursString = fmt.Sprintf("%.f", hours) + " hour"
+		} else {
+			hoursString = fmt.Sprintf("%.f", hours) + " hours"
+		}
+
+		minutes := -(diff.Minutes())
+		minutesString := fmt.Sprintf("%.f", minutes)
+		if minutesString == "1" {
+			minutesString = fmt.Sprintf("%.f", minutes) + " minute"
+		} else {
+			minutesString = fmt.Sprintf("%.f", minutes) + " minutes"
+		}
+
+		countdown := &discordgo.MessageEmbed{
+			Color: 41938,
+			Title: "When Friday? 🐬",
+			Fields: []*discordgo.MessageEmbedField{
+				{
+					Name:   "🐳 Days",
+					Value:  daysString,
+					Inline: true,
+				},
+				{
+					Name:   "🐟 Hours",
+					Value:  hoursString,
+					Inline: true,
+				},
+				{
+					Name:   "🦋 Minutes",
+					Value:  minutesString,
+					Inline: true,
+				},
+			},
+		}
+
+		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, countdown)
 	}
 }
