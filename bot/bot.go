@@ -119,6 +119,29 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	if m.Content == config.BotPrefix+"author" || m.Content == config.BotPrefix+" author" {
+		author := &discordgo.MessageEmbed{
+			Color: 41938,
+			Title: "Author 🧢",
+			Fields: []*discordgo.MessageEmbedField{
+				{
+					Name:   "🐬 Name",
+					Value:  "Aleksander Baran",
+					Inline: true,
+				},
+				{
+					Name:   "🦋 GitHub",
+					Value:  "olek-arsee",
+					Inline: true,
+				},
+			},
+			Image: &discordgo.MessageEmbedImage{
+				URL: "https://avatars.githubusercontent.com/u/74045117?v=4",
+			},
+		}
+		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, author)
+	}
+
 	if m.Content == config.BotPrefix+"ping" || m.Content == config.BotPrefix+" ping" {
 		_, _ = s.ChannelMessageSend(m.ChannelID, "Pong 🏓")
 	}
