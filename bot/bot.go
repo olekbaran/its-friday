@@ -46,6 +46,7 @@ func Start() {
 		return
 	}
 	fmt.Println("Bot is running!")
+	fmt.Println("\n-----LOGS-----")
 
 	fridayCron := cron.New()
 	fridayCron.AddFunc("0 6 * * FRI", friday)
@@ -90,7 +91,6 @@ func friday() {
 		}
 
 		dateFriday := time.Now()
-		fmt.Println("-----LOGS-----")
 		fmt.Println(dateFriday.Format("01-02-2006") + " Create: " + fridayMessageResponse1.Id)
 		fridayMessageId = fridayMessageResponse1.Id
 	}
@@ -135,6 +135,11 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Inline: true,
 				},
 				{
+					Name:   "pong",
+					Value:  "PING",
+					Inline: true,
+				},
+				{
 					Name:   "when-friday",
 					Value:  "Countdown to the next friday",
 					Inline: true,
@@ -176,57 +181,30 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if m.Content == config.BotPrefix+"when-friday" || m.Content == config.BotPrefix+" when-friday" {
-		date := time.Now()
+		today := time.Now().Weekday()
+		whenIsFriday := "When?"
 
-		format := "2006-01-02 15:04:05"
-		then, _ := time.Parse(format, "2022-03-04 00:00:00")
-
-		diff := date.Sub(then)
-
-		days := (diff.Hours() / -24) + 1
-		daysString := fmt.Sprintf("%.f", days)
-		if daysString == "1" {
-			daysString = fmt.Sprintf("%.f", days) + " day"
-		} else {
-			daysString = fmt.Sprintf("%.f", days) + " days"
-		}
-
-		hours := -(diff.Hours())
-		hoursString := fmt.Sprintf("%.f", hours)
-		if hoursString == "1" {
-			hoursString = fmt.Sprintf("%.f", hours) + " hour"
-		} else {
-			hoursString = fmt.Sprintf("%.f", hours) + " hours"
-		}
-
-		minutes := -(diff.Minutes())
-		minutesString := fmt.Sprintf("%.f", minutes)
-		if minutesString == "1" {
-			minutesString = fmt.Sprintf("%.f", minutes) + " minute"
-		} else {
-			minutesString = fmt.Sprintf("%.f", minutes) + " minutes"
+		switch time.Friday {
+		case today + 0:
+			whenIsFriday = "Today 🎉"
+		case today + 1:
+			whenIsFriday = "Tomorrow ☝🏼"
+		case today + 2:
+			whenIsFriday = "In two days ✌🏼"
+		case today + 3:
+			whenIsFriday = "In three days 🎶"
+		case today + 4:
+			whenIsFriday = "In four days 🍀"
+		case today + 5:
+			whenIsFriday = "In five days 🖐🏼"
+		default:
+			fmt.Println("Will be sometime away. ⏱")
 		}
 
 		countdown := &discordgo.MessageEmbed{
-			Color: 41938,
-			Title: "When Friday? 🐬",
-			Fields: []*discordgo.MessageEmbedField{
-				{
-					Name:   "🐳 Days",
-					Value:  daysString,
-					Inline: true,
-				},
-				{
-					Name:   "🐟 Hours",
-					Value:  hoursString,
-					Inline: true,
-				},
-				{
-					Name:   "🦋 Minutes",
-					Value:  minutesString,
-					Inline: true,
-				},
-			},
+			Color:       41938,
+			Title:       "When Friday? 🐬",
+			Description: whenIsFriday,
 		}
 
 		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, countdown)
