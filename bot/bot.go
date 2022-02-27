@@ -182,29 +182,29 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Content == config.BotPrefix+"when-friday" || m.Content == config.BotPrefix+" when-friday" {
 		today := time.Now().Weekday()
-		whenIsFriday := "When?"
+		whenFridayIs := "When?"
 
 		switch time.Friday {
 		case today + 0:
-			whenIsFriday = "Today 🎉"
+			whenFridayIs = "Today 🎉"
 		case today + 1:
-			whenIsFriday = "Tomorrow ☝🏼"
+			whenFridayIs = "Tomorrow ☝🏼"
 		case today + 2:
-			whenIsFriday = "In two days ✌🏼"
+			whenFridayIs = "In two days ✌🏼"
 		case today + 3:
-			whenIsFriday = "In three days 🎶"
+			whenFridayIs = "In three days 🎶"
 		case today + 4:
-			whenIsFriday = "In four days 🍀"
+			whenFridayIs = "In four days 🍀"
 		case today + 5:
-			whenIsFriday = "In five days 🖐🏼"
+			whenFridayIs = "In five days 🖐🏼"
 		default:
 			fmt.Println("Will be sometime away. ⏱")
 		}
 
 		countdown := &discordgo.MessageEmbed{
 			Color:       41938,
-			Title:       "When Friday? 🐬",
-			Description: whenIsFriday,
+			Title:       "When friday? 🐬",
+			Description: whenFridayIs,
 		}
 
 		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, countdown)
