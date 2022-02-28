@@ -7,6 +7,7 @@
 🐬 Discord BOT written in Go.
 
 Technologies used:
+
 - [discordgo](https://github.com/bwmarrin/discordgo)
 - [cron](https://github.com/robfig/cron)
 
@@ -14,26 +15,30 @@ Technologies used:
 <h3>Commands</h3>
 
 - #### `help`
-Sends the embed with listed all available commands.
+
+  Sends the embed with listed all available commands.
 
 - #### `author`
-Embed about the developer.
+
+  Embed about the developer.
 
 - #### `ping`
-Simple method to check if we have communication with the BOT.
+
+  Simple method to check if we have communication with the BOT.
 
 - #### `pong`
-Like ping but vice versa.
+
+  Like ping but vice versa.
 
 - #### `when-friday`
-Sends how many days are left to the next Friday.
+  Sends how many days are left to the next Friday.
 
 <h3>Other</h3>
 
 - #### Friday embed
-itsFriday automatically sends embed when Friday starts. The BOT does this to make users smile and remind them that this is the last day of the working week. When Monday comes, message about Friday is deleted.
+  itsFriday automatically sends embed when Friday starts. The BOT does this to make users smile and remind them that this is the last day of the working week. When Monday comes, message about Friday is deleted.
 
 <h1>TO DO</h1>
 
 - Possibility to change prefix
-- Multi server Friday message
+- Multi server Friday message - deleting

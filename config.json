@@ -1,5 +1,5 @@
 {
   "Token": "DISCORD_TOKEN",
   "BotPrefix": "YOUR_PREFIX",
-  "FridayMessageChannel": "CHANNEL_ID"
+  "FridayMessageChannel": ["ID1", "ID2"]
 }

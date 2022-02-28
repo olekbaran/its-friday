@@ -58,60 +58,67 @@ func Start() {
 }
 
 func friday() {
-	f, err := os.Open("friday-message.json")
-	if err != nil {
-		fmt.Println("Error with a friday-message.json file!")
-	}
-	defer f.Close()
-	req, err := http.NewRequest("POST", os.ExpandEnv("https://discord.com/api/channels/"+config.FridayMessageChannel+"/messages"), f)
-	if err != nil {
-		fmt.Println("Error with sending a request")
-	}
-	req.Header.Set("Authorization", os.ExpandEnv("Bot "+config.Token))
-	req.Header.Set("Content-Type", "application/json")
+	for i := 0; i < len(config.FridayMessageChannel); i++ {
+		f, err := os.Open("friday-message.json")
+		if err != nil {
+			fmt.Println("Error with a friday-message.json file!")
+		}
+		defer f.Close()
+		req, err := http.NewRequest("POST", os.ExpandEnv("https://discord.com/api/channels/"+config.FridayMessageChannel[i]+"/messages"), f)
+		if err != nil {
+			fmt.Println("Error with sending a request")
+		}
+		req.Header.Set("Authorization", os.ExpandEnv("Bot "+config.Token))
+		req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		fmt.Println("Error with a response")
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusOK {
-		bodyBytes, err := io.ReadAll(resp.Body)
-
+		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			fmt.Println("Error with a response")
 		}
 
-		var fridayMessageResponse1 fridayMessageResponse
-		errResponse := json.Unmarshal(bodyBytes, &fridayMessageResponse1)
-		if err != nil {
-			fmt.Println(errResponse)
-		}
+		defer resp.Body.Close()
 
-		dateFriday := time.Now()
-		fmt.Println(dateFriday.Format("01-02-2006") + " Create: " + fridayMessageResponse1.Id)
-		fridayMessageId = fridayMessageResponse1.Id
+		if resp.StatusCode == http.StatusOK {
+			bodyBytes, err := io.ReadAll(resp.Body)
+
+			if err != nil {
+				fmt.Println("Error with a response")
+			}
+
+			var fridayMessageResponse1 fridayMessageResponse
+			errResponse := json.Unmarshal(bodyBytes, &fridayMessageResponse1)
+			if err != nil {
+				fmt.Println(errResponse)
+			}
+
+			dateFriday := time.Now()
+			fmt.Println(dateFriday.Format("01-02-2006") + " Create: " + fridayMessageResponse1.Id)
+			fridayMessageId = fridayMessageResponse1.Id
+			time.Sleep(time.Second)
+		}
 	}
 }
 
 func monday() {
-	req, err := http.NewRequest("DELETE", "https://discord.com/api/channels/"+config.FridayMessageChannel+"/messages/"+fridayMessageId, nil)
-	if err != nil {
-		fmt.Println("Error with sending a request")
-	}
-	req.Header.Set("Authorization", "Bot "+config.Token)
-	req.Header.Set("Content-Type", "application/json")
+	for i := 0; i < len(config.FridayMessageChannel); i++ {
+		//TO DO - fridayMessageId as an array
+		req, err := http.NewRequest("DELETE", "https://discord.com/api/channels/"+config.FridayMessageChannel[i]+"/messages/"+fridayMessageId, nil)
+		if err != nil {
+			fmt.Println("Error with sending a request")
+		}
+		req.Header.Set("Authorization", "Bot "+config.Token)
+		req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		fmt.Println("Error with a response")
-	}
-	defer resp.Body.Close()
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			fmt.Println("Error with a response")
+		}
+		defer resp.Body.Close()
 
-	dateMonday := time.Now()
-	fmt.Println(dateMonday.Format("01-02-2006") + " Delete: " + fridayMessageId)
+		dateMonday := time.Now()
+		fmt.Println(dateMonday.Format("01-02-2006") + " Delete: " + fridayMessageId)
+		time.Sleep(time.Second)
+	}
 }
 
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {

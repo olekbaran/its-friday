@@ -9,15 +9,15 @@ import (
 var (
 	Token                string
 	BotPrefix            string
-	FridayMessageChannel string
+	FridayMessageChannel []string
 
 	config *configStruct
 )
 
 type configStruct struct {
-	Token                string `json:"Token"`
-	BotPrefix            string `json:"BotPrefix"`
-	FridayMessageChannel string `json:"FridayMessageChannel"`
+	Token                string   `json:"Token"`
+	BotPrefix            string   `json:"BotPrefix"`
+	FridayMessageChannel []string `json:"FridayMessageChannel"`
 }
 
 func ReadConfig() error {
