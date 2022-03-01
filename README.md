@@ -41,4 +41,4 @@ Technologies used:
 <h1>TO DO</h1>
 
 - Possibility to change prefix
-- Multi server Friday message - deleting
+- Add channel ID to the array

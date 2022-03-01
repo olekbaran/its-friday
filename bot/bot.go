@@ -14,13 +14,14 @@ import (
 )
 
 var BotId string
-var fridayMessageId string
+var fridayMessageId []string
 
 type fridayMessageResponse struct {
 	Id string
 }
 
 func Start() {
+	fridayMessageId = make([]string, len(config.FridayMessageChannel))
 	goBot, err := discordgo.New("Bot " + config.Token)
 
 	if err != nil {
@@ -93,7 +94,7 @@ func friday() {
 
 			dateFriday := time.Now()
 			fmt.Println(dateFriday.Format("01-02-2006") + " Create: " + fridayMessageResponse1.Id)
-			fridayMessageId = fridayMessageResponse1.Id
+			fridayMessageId[i] = fridayMessageResponse1.Id
 			time.Sleep(time.Second)
 		}
 	}
@@ -101,8 +102,7 @@ func friday() {
 
 func monday() {
 	for i := 0; i < len(config.FridayMessageChannel); i++ {
-		//TO DO - fridayMessageId as an array
-		req, err := http.NewRequest("DELETE", "https://discord.com/api/channels/"+config.FridayMessageChannel[i]+"/messages/"+fridayMessageId, nil)
+		req, err := http.NewRequest("DELETE", "https://discord.com/api/channels/"+config.FridayMessageChannel[i]+"/messages/"+fridayMessageId[i], nil)
 		if err != nil {
 			fmt.Println("Error with sending a request")
 		}
@@ -116,7 +116,7 @@ func monday() {
 		defer resp.Body.Close()
 
 		dateMonday := time.Now()
-		fmt.Println(dateMonday.Format("01-02-2006") + " Delete: " + fridayMessageId)
+		fmt.Println(dateMonday.Format("01-02-2006") + " Delete: " + fridayMessageId[i])
 		time.Sleep(time.Second)
 	}
 }
