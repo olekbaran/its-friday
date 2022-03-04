@@ -4,7 +4,7 @@
 </h1>
 <h1>Description</h1>
 
-🐬 Discord BOT written in Go.
+🐬 Discord BOT built in Go.
 
 Technologies used:
 
@@ -24,7 +24,7 @@ Technologies used:
 
 - #### `ping`
 
-  Simple method to check if we have communication with the BOT.
+  A Simple method to check if we have communication with the BOT.
 
 - #### `pong`
 
@@ -36,9 +36,9 @@ Technologies used:
 <h3>Other</h3>
 
 - #### Friday embed
-  itsFriday automatically sends embed when Friday starts. The BOT does this to make users smile and remind them that this is the last day of the working week. When Monday comes, message about Friday is deleted.
+  itsFriday automatically sends embed when Friday starts. The BOT does this to make users smile and remind them that this is the last day of the working week. When Monday comes, the message about Friday is deleted.
 
 <h1>TO DO</h1>
 
-- Possibility to change prefix
+- Possibility to change the prefix
 - Add channel ID to the array
