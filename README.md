@@ -4,7 +4,7 @@
 </h1>
 <h1>Description</h1>
 
-🐬 Discord BOT built in Go.
+🐬 Discord BOT built with Go.
 
 Technologies used:
 
