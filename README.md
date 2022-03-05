@@ -34,7 +34,7 @@ Technologies used:
 
   Sends how many days are left to the next Friday.
 
-- ### `add-friday`
+- #### `add-friday`
   Adds channel to the Friday message sending list. After the space, you have to put the channel ID.
 
 <h3>Other</h3>
