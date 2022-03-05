@@ -31,7 +31,11 @@ Technologies used:
   Like ping but vice versa.
 
 - #### `when-friday`
+
   Sends how many days are left to the next Friday.
+
+- ### `add-friday`
+  Adds channel to the Friday message sending list. After the space, you have to put the channel ID.
 
 <h3>Other</h3>
 
@@ -40,5 +44,4 @@ Technologies used:
 
 <h1>TO DO</h1>
 
-- Possibility to change the prefix
-- Add channel ID to the array
+- Remove channel from the array
