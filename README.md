@@ -1,6 +1,6 @@
 <h1>
   <img src="https://raw.githubusercontent.com/olek-arsee/its-friday/main/images/its-friday.png" width="123px" />
-  <p>itsFriday</p>
+  <p>its-friday</p>
 </h1>
 <h1>Description</h1>
 
@@ -46,7 +46,3 @@ Technologies used:
 
 - #### Friday embed
   itsFriday automatically sends embed when Friday starts. The BOT does this to make users smile and remind them that this is the last day of the working week. When Monday comes, the message about Friday is deleted.
-
-<h1>TO DO</h1>
-
-- Improve code clarity
