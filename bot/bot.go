@@ -142,6 +142,10 @@ func trimLeftChars(s string, n int) string {
 	return s[:0]
 }
 
+func RemoveIndex(s []string, index int) []string {
+	return append(s[:index], s[index+1:]...)
+}
+
 func JSONMarshal(t interface{}) ([]byte, error) {
 	buffer := &bytes.Buffer{}
 	encoder := json.NewEncoder(buffer)
@@ -177,12 +181,17 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 				},
 				{
 					Name:   "when-friday",
-					Value:  "Countdown to the next friday",
+					Value:  "Countdown to the next friday!",
 					Inline: true,
 				},
 				{
 					Name:   "add-friday",
-					Value:  "Adds channel to the Friday message sending list. After the space, you have to put the channel ID.",
+					Value:  "Adds channel to the Friday message sending list. Put a channel ID after the space!",
+					Inline: true,
+				},
+				{
+					Name:   "delete-friday",
+					Value:  "Deletes channel from the Friday message sending list. Put a channel ID after the space!",
 					Inline: true,
 				},
 			},
@@ -253,43 +262,111 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if strings.HasPrefix(m.Content, config.BotPrefix+"add-friday") || strings.HasPrefix(m.Content, config.BotPrefix+" add-friday") {
 		var newId string
-		if strings.HasPrefix(m.Content, config.BotPrefix+"add-friday") {
-			newId = strings.ReplaceAll(m.Content, config.BotPrefix+"add-friday", "")
-		} else if strings.HasPrefix(m.Content, config.BotPrefix+" add-friday") {
-			newId = strings.ReplaceAll(m.Content, config.BotPrefix+" add-friday", "")
-		}
-		newId = trimLeftChars(newId, 1)
 
-		if len(m.Content) <= 11 {
-			_, _ = s.ChannelMessageSend(m.ChannelID, "Please enter the correct ID of your channel! 🐳")
-		} else {
-			var exists bool
+		if strings.HasPrefix(m.Content, config.BotPrefix+"add-friday ") {
+			if strings.HasPrefix(m.Content, config.BotPrefix+"add-friday") {
+				newId = strings.ReplaceAll(m.Content, config.BotPrefix+"add-friday", "")
+			} else if strings.HasPrefix(m.Content, config.BotPrefix+" add-friday") {
+				newId = strings.ReplaceAll(m.Content, config.BotPrefix+" add-friday", "")
+			}
+			newId = trimLeftChars(newId, 1)
 
-			for i := 0; i < len(config.FridayMessageChannel); i++ {
-				if fridayMessageId[i] == newId {
-					exists = true
-					break
+			if len(m.Content) <= 11 {
+				_, _ = s.ChannelMessageSend(m.ChannelID, "Please enter the correct ID of your channel! 🐳")
+			} else {
+				var exists bool
+
+				for i := 0; i < len(config.FridayMessageChannel); i++ {
+					if fridayMessageId[i] == newId {
+						exists = true
+						break
+					}
+				}
+
+				if exists {
+					_, _ = s.ChannelMessageSend(m.ChannelID, "This channel already receives messages about Friday! 🐳")
+				} else {
+					req, err := http.NewRequest("GET", os.ExpandEnv("https://discord.com/api/channels/"+newId), nil)
+					if err != nil {
+						fmt.Println("Error with sending a request")
+					}
+					req.Header.Set("Authorization", "Bot "+config.Token)
+					req.Header.Set("Content-Type", "application/json")
+
+					resp, err := http.DefaultClient.Do(req)
+					if err != nil {
+						fmt.Println("Error with a response")
+					}
+					defer resp.Body.Close()
+
+					if resp.StatusCode == 200 {
+						fridayMessageId = append(fridayMessageId, newId)
+
+						filename := "config.json"
+						file, err := ioutil.ReadFile(filename)
+						if err != nil {
+							fmt.Println("Error with a config.json file")
+						}
+
+						data := configJson{}
+
+						json.Unmarshal(file, &data)
+
+						newStruct := &configJson{
+							Token:                config.Token,
+							BotPrefix:            config.BotPrefix,
+							FridayMessageChannel: fridayMessageId,
+						}
+
+						data = *newStruct
+
+						dataBytes, err := JSONMarshal(data)
+						if err != nil {
+							fmt.Println("Error with marshalling array")
+						}
+
+						err = ioutil.WriteFile(filename, dataBytes, 0644)
+						if err != nil {
+							fmt.Println("Error with saving a file")
+						}
+						_, _ = s.ChannelMessageSend(m.ChannelID, "Your channel has been added to receive messages about Friday! 🐬")
+					} else {
+						_, _ = s.ChannelMessageSend(m.ChannelID, "Please enter the correct ID of your channel! 🐳")
+					}
 				}
 			}
+		} else {
+			_, _ = s.ChannelMessageSend(m.ChannelID, "Please enter an ID after the space! 🐳")
+		}
+	}
 
-			if exists {
-				_, _ = s.ChannelMessageSend(m.ChannelID, "This channel already receives messages about Friday! 🐳")
+	if strings.HasPrefix(m.Content, config.BotPrefix+"delete-friday") || strings.HasPrefix(m.Content, config.BotPrefix+" delete-friday") {
+		var newId string
+
+		if strings.HasPrefix(m.Content, config.BotPrefix+"delete-friday ") {
+			if strings.HasPrefix(m.Content, config.BotPrefix+"delete-friday") {
+				newId = strings.ReplaceAll(m.Content, config.BotPrefix+"delete-friday", "")
+			} else if strings.HasPrefix(m.Content, config.BotPrefix+" delete-friday") {
+				newId = strings.ReplaceAll(m.Content, config.BotPrefix+" delete-friday", "")
+			}
+			newId = trimLeftChars(newId, 1)
+
+			if len(m.Content) <= 11 {
+				_, _ = s.ChannelMessageSend(m.ChannelID, "Please enter the correct ID of your channel! 🐳")
 			} else {
-				req, err := http.NewRequest("GET", os.ExpandEnv("https://discord.com/api/channels/"+newId), nil)
-				if err != nil {
-					fmt.Println("Error with sending a request")
-				}
-				req.Header.Set("Authorization", "Bot "+config.Token)
-				req.Header.Set("Content-Type", "application/json")
+				var exists bool
+				var index int
 
-				resp, err := http.DefaultClient.Do(req)
-				if err != nil {
-					fmt.Println("Error with a response")
+				for i := 0; i < len(config.FridayMessageChannel); i++ {
+					if fridayMessageId[i] == newId {
+						exists = true
+						index = i
+						break
+					}
 				}
-				defer resp.Body.Close()
 
-				if resp.StatusCode == 200 {
-					fridayMessageId = append(fridayMessageId, newId)
+				if exists {
+					fridayMessageId = RemoveIndex(fridayMessageId, index)
 
 					filename := "config.json"
 					file, err := ioutil.ReadFile(filename)
@@ -318,11 +395,13 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						fmt.Println("Error with saving a file")
 					}
-					_, _ = s.ChannelMessageSend(m.ChannelID, "Your channel has been added to receive messages about Friday! 🐬")
+					_, _ = s.ChannelMessageSend(m.ChannelID, "Your channel has been deleted from receiving messages about Friday! 🐬")
 				} else {
-					_, _ = s.ChannelMessageSend(m.ChannelID, "Please enter the correct ID of your channel! 🐳")
+					_, _ = s.ChannelMessageSend(m.ChannelID, "There is no such ID in the Friday message sending list! 🐳")
 				}
 			}
+		} else {
+			_, _ = s.ChannelMessageSend(m.ChannelID, "Please enter an ID after the space! 🐳")
 		}
 	}
 }

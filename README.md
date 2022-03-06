@@ -35,7 +35,12 @@ Technologies used:
   Sends how many days are left to the next Friday.
 
 - #### `add-friday`
-  Adds channel to the Friday message sending list. After the space, you have to put the channel ID.
+
+  Adds channel to the Friday message sending list. You have to put a channel ID after the space!
+
+- #### `delete-friday`
+
+  Deletes channel from the Friday message sending list. You have to put a channel ID after the space!
 
 <h3>Other</h3>
 
@@ -44,4 +49,4 @@ Technologies used:
 
 <h1>TO DO</h1>
 
-- Remove channel from the array
+- Improve code clarity
