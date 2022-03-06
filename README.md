@@ -11,8 +11,16 @@ Technologies used:
 - [discordgo](https://github.com/bwmarrin/discordgo)
 - [cron](https://github.com/robfig/cron)
 
+<h1>Invitation</h1>
+
+https://discord.com/api/oauth2/authorize?client_id=924691358386634763&permissions=248832&scope=bot
+
 <h1>Features</h1>
 <h3>Commands</h3>
+
+- #### `invite`
+
+  Sends a link to invite the BOT to other servers.
 
 - #### `help`
 

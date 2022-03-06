@@ -159,11 +159,25 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	if m.Content == config.BotPrefix+"invite" || m.Content == config.BotPrefix+" invite" {
+		invite := &discordgo.MessageEmbed{
+			Color:       41938,
+			Title:       "Invite me to your server! 🐬",
+			Description: "https://discord.com/api/oauth2/authorize?client_id=924691358386634763&permissions=248832&scope=bot",
+		}
+		_, _ = s.ChannelMessageSendEmbed(m.ChannelID, invite)
+	}
+
 	if m.Content == config.BotPrefix+"help" || m.Content == config.BotPrefix+" help" {
 		help := &discordgo.MessageEmbed{
 			Color: 41938,
 			Title: "Help 🐬",
 			Fields: []*discordgo.MessageEmbedField{
+				{
+					Name:   "invite",
+					Value:  "Sends invitation",
+					Inline: true,
+				},
 				{
 					Name:   "author",
 					Value:  "Infos about the developer",
